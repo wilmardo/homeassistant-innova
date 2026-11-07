@@ -73,7 +73,7 @@ async def _async_update_coordinator(hass: HomeAssistant, entry: ConfigEntry, api
     scan_interval_seconds = entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
     scan_interval = timedelta(seconds=scan_interval_seconds)
 
-    coordinator = create_coordinator(hass, api, scan_interval)
+    coordinator = create_coordinator(hass, api, scan_interval, entry.data[CONF_HOST])
     await coordinator.async_config_entry_first_refresh()
 
     # Save the coordinator in hass.data
@@ -82,14 +82,17 @@ async def _async_update_coordinator(hass: HomeAssistant, entry: ConfigEntry, api
     return coordinator
 
 
-def create_coordinator(hass: HomeAssistant, api: Innova, scan_interval: timedelta) -> InnovaCoordinator:
+def create_coordinator(
+    hass: HomeAssistant, api: Innova, scan_interval: timedelta, host: str
+) -> InnovaCoordinator:
     """Create the coordinator with the provided scan interval."""
     coordinator = InnovaCoordinator(
         hass,
         api,
         _LOGGER,
-        name=DOMAIN,
-        update_interval=scan_interval
+        name=f"{DOMAIN} {host}",
+        update_interval=scan_interval,
+        host=host,
     )
 
     return coordinator

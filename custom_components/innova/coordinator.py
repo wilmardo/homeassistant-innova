@@ -14,8 +14,10 @@ class InnovaCoordinator(DataUpdateCoordinator[Innova]):
         logger: logging.Logger,
         name: str,
         update_interval: timedelta,
+        host: str,
     ):
         self.innova = innova
+        self.host = host
 
         super().__init__(hass, logger, name=name, update_interval=update_interval)
 
@@ -27,6 +29,6 @@ class InnovaCoordinator(DataUpdateCoordinator[Innova]):
         """
         success = await self.innova.async_update()
         if not success:
-            raise UpdateFailed("Innova connection issue")
+            raise UpdateFailed(f"Unable to fetch status from Innova unit at {self.host}")
         
         return self.innova
