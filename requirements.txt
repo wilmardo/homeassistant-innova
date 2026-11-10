@@ -1,2 +1,2 @@
 homeassistant==2026.10.2
-innova-controls==2.2.4
+https://github.com/wilmardo/innova-controls/archive/combined.zip
